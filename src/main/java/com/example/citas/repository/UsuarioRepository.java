@@ -8,5 +8,7 @@ import com.example.citas.models.Usuario;
 
 public interface UsuarioRepository extends JpaRepository<Usuario, String> {
 
-    Optional<Usuario> findByName(String name);
+    Optional<Usuario> findByEmail(String name);
+
+
 }

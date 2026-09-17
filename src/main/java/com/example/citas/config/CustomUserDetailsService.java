@@ -18,11 +18,11 @@ public class CustomUserDetailsService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Usuario usuario = this.usuarioRepository.findByName(username)
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        Usuario usuario = this.usuarioRepository.findByEmail(email)
                 .orElseThrow(() -> new AuthException("Usuario no registrado"));
 
-        return User.withUsername(usuario.getName()).password(usuario.getPassword()).roles(usuario.getRole().getName())
+        return User.withUsername(usuario.getEmail()).password(usuario.getPassword()).roles(usuario.getRole().getName())
                 .build();
     }
 }

@@ -23,7 +23,7 @@ public class JwtService {
                 .subject(email)
                 .claim("rol", rol)
                 .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + 1000 * 10 * 100))
+                .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60))
                 .signWith(secretKey)
                 .compact();
 

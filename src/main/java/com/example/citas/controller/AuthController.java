@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.citas.dto.LoginRequest;
+import com.example.citas.dto.LoginRespones;
 import com.example.citas.dto.UserRegisterResponse;
 import com.example.citas.dto.UserRequest;
 import com.example.citas.security.JwtService;
@@ -17,7 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
-
+@RequestMapping("/api/v1/")
 public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
@@ -31,18 +32,19 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> loginUser(@RequestBody LoginRequest request) {
+    public ResponseEntity<LoginRespones> loginUser(@RequestBody LoginRequest request) {
         Authentication authentication = this.authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
         String token = this.jwtService.generateToken(authentication.getName(), authentication.getAuthorities()
                 .iterator()
                 .next().getAuthority().replace("ROLE_", ""));
-        return ResponseEntity.ok(token);
+        return ResponseEntity.ok(new LoginRespones(token));
 
     }
 
     @PostMapping("/register")
     public ResponseEntity<UserRegisterResponse> registerUser(@RequestBody UserRequest request) {
+        
         return ResponseEntity.status(HttpStatus.CREATED).body(this.authService.register(request));
     }
 }

@@ -5,12 +5,15 @@ public class UserRegisterResponse {
     private String name;
     private String email;
     private int phone;
+    private RoleResponse rol;
 
-    public UserRegisterResponse(String id_usuario, String name, String email, int phone) {
+    public UserRegisterResponse(String id_usuario, String name, String email, int phone, RoleResponse rol) {
         this.id_usuario = id_usuario;
         this.name = name;
         this.email = email;
         this.phone = phone;
+
+        this.rol = rol;
     }
 
     public String getEmail() {
@@ -27,6 +30,10 @@ public class UserRegisterResponse {
 
     public int getPhone() {
         return phone;
+    }
+
+    public RoleResponse getRol() {
+        return rol;
     }
 
 }

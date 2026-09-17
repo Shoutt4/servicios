@@ -36,6 +36,14 @@ public class Usuario {
         this.phone = phone;
     }
 
+    public Usuario(String name, String email, String password, int phone, Role role) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.phone = phone;
+        this.role = role;
+    }
+
     public String getEmail() {
         return email;
     }
