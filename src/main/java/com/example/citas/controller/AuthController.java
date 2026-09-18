@@ -16,6 +16,8 @@ import com.example.citas.security.JwtService;
 import com.example.citas.services.AuthService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.GetMapping;
 
 @RestController
 @RequestMapping("/api/v1/")
@@ -44,7 +46,13 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<UserRegisterResponse> registerUser(@RequestBody UserRequest request) {
-        
+
         return ResponseEntity.status(HttpStatus.CREATED).body(this.authService.register(request));
     }
+
+    @GetMapping("/detaills")
+    public ResponseEntity<UserRegisterResponse> obtenerDetallesUser(@RequestHeader("Authorization") String token) {
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(this.authService.getUser(token));
+    }
+
 }

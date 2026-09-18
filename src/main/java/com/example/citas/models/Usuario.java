@@ -21,7 +21,7 @@ public class Usuario {
     private String email;
     private String password;
     private int phone;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private Role role;
     private LocalDateTime createAt;
 

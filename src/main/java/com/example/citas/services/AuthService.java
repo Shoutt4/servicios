@@ -1,6 +1,9 @@
 package com.example.citas.services;
 
+import java.io.IOException;
+
 import javax.management.relation.RoleNotFoundException;
+import javax.print.DocFlavor.READER;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -13,8 +16,7 @@ import com.example.citas.models.Role;
 import com.example.citas.models.Usuario;
 import com.example.citas.repository.RoleRepository;
 import com.example.citas.repository.UsuarioRepository;
-
-import jakarta.transaction.Transactional;
+import com.example.citas.security.JwtService;
 
 @Service
 public class AuthService {
@@ -22,12 +24,14 @@ public class AuthService {
     private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository repository;
+    private final JwtService jwtService;
 
     public AuthService(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder,
-            RoleRepository roleRepository) {
+            RoleRepository roleRepository, JwtService jwtService) {
         this.usuarioRepository = usuarioRepository;
         this.passwordEncoder = passwordEncoder;
         this.repository = roleRepository;
+        this.jwtService = jwtService;
     }
 
     public Usuario convertirRequest(UserRequest request) {
@@ -51,6 +55,19 @@ public class AuthService {
             throw new IllegalArgumentException("el gemail ya esta registrado");
         }
 
+    }
+
+    public UserRegisterResponse getUser(String token) {
+        Usuario user = null;
+        if (token != null && token.startsWith("Bearer ")) {
+            token = token.substring(7);
+
+            user = this.usuarioRepository.findByEmail(this.jwtService.getName(token))
+                    .orElseThrow(() -> new IllegalArgumentException("token invalido"));
+            return convertirResponse(user);
+        } else {
+            throw new IllegalArgumentException("TOKEN INVALIDO");
+        }
     }
 
 }
