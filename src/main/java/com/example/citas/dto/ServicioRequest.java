@@ -3,6 +3,7 @@ package com.example.citas.dto;
 import java.sql.Time;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
@@ -13,12 +14,12 @@ public class ServicioRequest {
     private String nombre;
     @Size(min = 4, max = 150, message = "el texto debe ser entre 4 a 150 caracteres")
     private String descipcion;
-    @NotBlank(message = "la duracion del servicio es obligatorio")
+    @NotNull(message = "la duracion del servicio es obligatorio")
     private Time duracion_servicio;
-    @NotBlank(message = "el estado es obligatiorio")
+    @NotNull(message = "el estado es obligatiorio")
     private Boolean activo;
     @PositiveOrZero(message = "el precio debe ser positivo o 0")
-    @NotBlank(message = "el precio es obligatorio")
+    @NotNull(message = "el precio es obligatorio")
     private double precio;
 
     public ServicioRequest(String nombre, String descripcion, Time duracion_servicio, Boolean activo, double precio) {
