@@ -2,6 +2,7 @@ package com.example.citas.controller;
 
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.citas.dto.ResponseBookingDTO;
 import com.example.citas.dto.ServicioRequest;
 import com.example.citas.dto.ServicioResponse;
 import com.example.citas.services.ServicioService;

@@ -2,22 +2,24 @@ package com.example.citas.services;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 
-import java.security.PublicKey;
+import com.example.citas.dto.ResponseBookingDTO;
+
 import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.MissingPathVariableException;
+
 import org.springframework.web.server.ResponseStatusException;
 
 import com.example.citas.repository.ServicioRepository;
 import com.example.citas.dto.ServicioRequest;
 import com.example.citas.dto.ServicioResponse;
 import com.example.citas.excepcion.ServicioException;
+import com.example.citas.models.Reserva;
 import com.example.citas.models.Servicio;
+import java.util.List;
 
 @Service
 public class ServicioService {

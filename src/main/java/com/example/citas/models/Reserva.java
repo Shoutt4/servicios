@@ -38,7 +38,7 @@ public class Reserva {
 
     }
 
-    public Reserva(Usuario usuario_id, Servicio servicio_id, LocalDateTime fecha_reserva, Estado estado) {
+    public Reserva(Usuario usuario_id, Servicio servicio_id, Estado estado) {
         this.usuario_id = usuario_id;
         this.servicio_id = servicio_id;
         this.fecha_reserva = fecha_reserva;
@@ -92,5 +92,6 @@ public class Reserva {
     @PrePersist
     public void onCreate() {
         this.create_at = LocalDateTime.now();
+        this.fecha_reserva = LocalDateTime.now();
     }
 }
