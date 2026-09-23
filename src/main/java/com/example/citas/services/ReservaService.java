@@ -11,7 +11,9 @@ import com.example.citas.dto.RoleResponse;
 import com.example.citas.dto.ServicioResponse;
 import com.example.citas.dto.UserRegisterResponse;
 import com.example.citas.excepcion.AuthException;
+import com.example.citas.excepcion.ExceptionGeneral;
 import com.example.citas.excepcion.ServicioException;
+import com.example.citas.models.Estado;
 import com.example.citas.models.Reserva;
 import com.example.citas.models.Servicio;
 import com.example.citas.models.Usuario;
@@ -73,5 +75,31 @@ public class ReservaService {
 
         public Page<ResponseBookingDTO> getAll(Pageable page) {
                 return this.reservaRespository.findAll(page).map(this::convertirReservaResponse);
+        }
+
+        @Transactional
+        public Page<ResponseBookingDTO> getAllFromy(Pageable page, String id_usuario) {
+                if (this.usuarioRepository.findById(id_usuario).isPresent()) {
+                        return this.reservaRespository.getAllFromY(id_usuario, page)
+                                        .map(this::convertirReservaResponse);
+                } else {
+                        throw new AuthException("usuario no encontrado con id " + id_usuario);
+                }
+        }
+
+        @Transactional
+        public Map<String, Object> updateEstado(String id_reserva, Estado estado) {
+                Map<String, Object> response = new HashMap<>();
+                if (this.reservaRespository.findById(id_reserva).isPresent()) {
+                        Reserva res = this.reservaRespository.findById(id_reserva)
+                                        .orElseThrow(() -> new ExceptionGeneral("reserva no encontrada con ese id"));
+                        res.setEstado(estado);
+                        response.put("estado ", "estado actualizdo correctamente");
+                        response.put("data", convertirReservaResponse(this.reservaRespository.save(res)));
+                        return response;
+
+                } else {
+                        throw new RuntimeException("resreva no encotrada");
+                }
         }
 }

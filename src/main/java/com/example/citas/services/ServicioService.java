@@ -17,9 +17,9 @@ import com.example.citas.repository.ServicioRepository;
 import com.example.citas.dto.ServicioRequest;
 import com.example.citas.dto.ServicioResponse;
 import com.example.citas.excepcion.ServicioException;
-import com.example.citas.models.Reserva;
+
 import com.example.citas.models.Servicio;
-import java.util.List;
+
 
 @Service
 public class ServicioService {
