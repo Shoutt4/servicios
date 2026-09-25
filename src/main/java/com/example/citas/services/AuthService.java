@@ -1,16 +1,17 @@
 package com.example.citas.services;
 
-import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
-import javax.management.relation.RoleNotFoundException;
-import javax.print.DocFlavor.READER;
-
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.citas.dto.RoleResponse;
+import com.example.citas.dto.UpdateUserDTO;
 import com.example.citas.dto.UserRegisterResponse;
 import com.example.citas.dto.UserRequest;
+import com.example.citas.excepcion.AuthException;
 import com.example.citas.excepcion.CategoriaExcetoon;
 import com.example.citas.models.Role;
 import com.example.citas.models.Usuario;
@@ -67,6 +68,30 @@ public class AuthService {
             return convertirResponse(user);
         } else {
             throw new IllegalArgumentException("TOKEN INVALIDO");
+        }
+    }
+
+    public UserRegisterResponse getUse(Authentication authentication) {
+        String username = authentication.getName();
+        Usuario us = this.usuarioRepository.findByEmail(username)
+                .orElseThrow(() -> new AuthException("usuario no logeado"));
+        return convertirResponse(us);
+
+    }
+
+    public Map<String, Object> updateUser(Authentication authException, UpdateUserDTO request) {
+        Map<String, Object> res = new HashMap<>();
+        Usuario us = this.usuarioRepository.findByEmail(authException.getName())
+                .orElseThrow(() -> new AuthException("usuario no encontrado"));
+        if (request != null) {
+            us.setName(request.getNombre());
+            us.setEmail(request.getCorreo());
+            us.setPhone((request.getPhone()));
+            res.put("estatus", "usuario actualizado");
+            res.put("data", convertirResponse(this.usuarioRepository.save(us)));
+            return res;
+        } else {
+            throw new AuthException("error");
         }
     }
 
