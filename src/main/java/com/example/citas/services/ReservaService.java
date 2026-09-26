@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 
 import com.example.citas.dto.CreateBookingDTO;
+import com.example.citas.dto.ReservaRequestDTO;
 import com.example.citas.dto.ResponseBookingDTO;
 import com.example.citas.dto.RoleResponse;
 import com.example.citas.dto.ServicioResponse;
@@ -38,17 +39,18 @@ public class ReservaService {
                 this.usuarioRepository = usuarioRepository;
         }
 
-        @Transactional
-        private Reserva convertirRequest(CreateBookingDTO request) {
-                Usuario user = this.usuarioRepository.findById(request.getUsuario_id())
-                                .orElseThrow(() -> new AuthException(
-                                                "usuario no encontrado con id  " + request.getUsuario_id()));
-                Servicio servicio = this.servicioRepository.findById(request.getServici_id())
-                                .orElseThrow(() -> new ServicioException(
-                                                "servicio no encontrado con id " + request.getServici_id()));
-                return new Reserva(user, servicio, request.getEstado());
-        }
-
+        /*
+         * @Transactional
+         * private Reserva convertirRequest(CreateBookingDTO request) {
+         * Usuario user = this.usuarioRepository.findById(request.getUsuario_id())
+         * .orElseThrow(() -> new AuthException(
+         * "usuario no encontrado con id  " + request.getUsuario_id()));
+         * Servicio servicio = this.servicioRepository.findById(request.getServici_id())
+         * .orElseThrow(() -> new ServicioException(
+         * "servicio no encontrado con id " + request.getServici_id()));
+         * return new Reserva(user, servicio, request.getEstado());
+         * }
+         */
         private ResponseBookingDTO convertirReservaResponse(Reserva reserva) {
                 ServicioResponse servicioResponse = new ServicioResponse(reserva.getServicio_id().getId_service(),
                                 reserva.getServicio_id().getNombre(), reserva.getServicio_id().getDuracion_Service(),
@@ -63,16 +65,18 @@ public class ReservaService {
                                 servicioResponse, usuarioResponse);
         }
 
-        @Transactional
-        public Map<String, Object> registrarReserva(CreateBookingDTO request) {
-                Reserva reserva = this.reservaRespository.save(convertirRequest(request));
-                Map<String, Object> response = new HashMap<>();
-                response.put("estado", "la reserva fue creada exitosamente");
-                response.put("data", convertirReservaResponse(this.reservaRespository.save(reserva)));
-                return response;
-
-        }
-
+        /*
+         * @Transactional
+         * public Map<String, Object> registrarReserva(CreateBookingDTO request) {
+         * Reserva reserva = this.reservaRespository.save(convertirRequest(request));
+         * Map<String, Object> response = new HashMap<>();
+         * response.put("estado", "la reserva fue creada exitosamente");
+         * response.put("data",
+         * convertirReservaResponse(this.reservaRespository.save(reserva)));
+         * return response;
+         * 
+         * }
+         */
         public Page<ResponseBookingDTO> getAll(Pageable page) {
                 return this.reservaRespository.findAll(page).map(this::convertirReservaResponse);
         }
@@ -100,6 +104,30 @@ public class ReservaService {
 
                 } else {
                         throw new RuntimeException("resreva no encotrada");
+                }
+        }
+
+        private Reserva convertirDtoRequest(ReservaRequestDTO ruest, Usuario usuario, Servicio servicio) {
+
+                return new Reserva(usuario, servicio, ruest.getEstado(), ruest.getFechaReserva());
+
+        }
+
+        @Transactional
+        public Map<String, Object> createReserva(ReservaRequestDTO request) {
+                Map<String, Object> response = new HashMap<>();
+                Servicio service = this.servicioRepository.findById(request.getIdServicio())
+                                .orElseThrow(() -> new ServicioException("Servicio no encontrado"));
+                Usuario usuario = this.usuarioRepository.findById(request.getIdUsuario())
+                                .orElseThrow(() -> new AuthException("usuario no encontrado"));
+                if (service.getActivo()) {
+                        response.put("status", "servicio creaodo con exito");
+                        response.put("data", convertirReservaResponse(
+                                        this.reservaRespository.save(this.reservaRespository
+                                                        .save(convertirDtoRequest(request, usuario, service)))));
+                        return response;
+                } else {
+                        throw new ServicioException("error al crear el servicio");
                 }
         }
 }

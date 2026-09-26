@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.citas.dto.CreateBookingDTO;
+import com.example.citas.dto.ReservaRequestDTO;
 import com.example.citas.dto.ResponseBookingDTO;
 import com.example.citas.services.ReservaService;
 import jakarta.validation.Valid;
@@ -33,12 +34,16 @@ public class ReservaController {
         this.reservaService = reservaService;
     }
 
-    @PreAuthorize("hasRole('USER')")
-    @PostMapping("/create")
-    public ResponseEntity<Map<String, Object>> registrarReserva(@Valid @RequestBody CreateBookingDTO request) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(this.reservaService.registrarReserva(request));
-    }
-
+    /*
+     * @PreAuthorize("hasRole('USER')")
+     * 
+     * @PostMapping("/create")
+     * public ResponseEntity<Map<String, Object>>
+     * registrarReserva(@Valid @RequestBody CreateBookingDTO request) {
+     * return ResponseEntity.status(HttpStatus.CREATED).body(this.reservaService.
+     * registrarReserva(request));
+     * }
+     */
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/getAll")
     public ResponseEntity<Page<ResponseBookingDTO>> getAll(Pageable page) {
@@ -57,5 +62,11 @@ public class ReservaController {
     public ResponseEntity<Map<String, Object>> updateEstado(@PathVariable String id,
             @RequestParam Estado estado) {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(this.reservaService.updateEstado(id, estado));
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @PostMapping("/register/reserva")
+    public ResponseEntity<Map<String, Object>> retisterReserva(@Valid @RequestBody ReservaRequestDTO requestDTO) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(this.reservaService.createReserva(requestDTO));
     }
 }
