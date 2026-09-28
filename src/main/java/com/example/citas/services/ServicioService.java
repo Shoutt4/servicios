@@ -20,7 +20,6 @@ import com.example.citas.excepcion.ServicioException;
 
 import com.example.citas.models.Servicio;
 
-
 @Service
 public class ServicioService {
     private final ServicioRepository servicioRepository;
@@ -89,4 +88,5 @@ public class ServicioService {
             throw new ServicioException("error al cambiar  el estado");
         }
     }
+
 }

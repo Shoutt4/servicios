@@ -5,11 +5,9 @@ import java.util.Date;
 import javax.crypto.SecretKey;
 
 import org.springframework.stereotype.Service;
-
-import com.example.citas.models.Role;
-import com.example.citas.models.Usuario;
-
+import java.util.Map;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 
 @Service
@@ -25,6 +23,17 @@ public class JwtService {
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60))
                 .signWith(secretKey)
+                .compact();
+
+    }
+
+    public String generateToken(Map<String, Object> claims, String subJect) {
+        return Jwts.builder()
+                .setClaims(claims)
+                .setSubject(subJect)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60))
+                .signWith(secretKey, SignatureAlgorithm.HS256)
                 .compact();
 
     }
