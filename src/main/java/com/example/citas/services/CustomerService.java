@@ -13,6 +13,8 @@ import com.example.citas.excepcion.CustomerExceptio;
 import com.example.citas.models.Customer;
 import com.example.citas.repository.CustomerRepository;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class CustomerService {
 
@@ -72,6 +74,45 @@ public class CustomerService {
             return res;
         } else {
             throw new CustomerExceptio("nombre no encontrado");
+        }
+
+    }
+
+    public Map<String, Object> getCustomerByQueryNative(String email) {
+
+        Map<String, Object> res = new HashMap<>();
+        Customer customer = this.customerRepository.getByEnailNative(email);
+        if (customer != null) {
+            res.put("estatus", "usuario ecnontrado co email" + email);
+            res.put("data", convertirResponseCustomer(customer));
+            return res;
+        } else {
+            throw new CustomerExceptio("usuario no encontrado con  email : " + email);
+        }
+
+    }
+
+    public Map<String, Object> getByNativeParam(String email) {
+        Map<String, Object> res = new HashMap<>();
+        Customer customer = this.customerRepository.getByParamCustomerNative(email);
+        if (customer != null) {
+            res.put("estatus", "usuario enecontrado con email " + email);
+            res.put("data", convertirResponseCustomer(customer));
+            return res;
+        } else {
+            throw new CustomerExceptio("usuario no registradop o encontrado con " + email);
+        }
+    }
+
+    @Transactional
+    public Map<String, String> updateFirsname(String firsName, String email) {
+        Map<String, String> res = new HashMap<>();
+        if (this.customerRepository.getByEmailCustomer(email) != null) {
+            this.customerRepository.updateEmailByEmail(firsName, email);
+            res.put("estatus", "usuario actualizado con email" + email);
+            return res;
+        } else {
+            throw new CustomerExceptio("exception no se encuentro el usuario");
         }
 
     }
