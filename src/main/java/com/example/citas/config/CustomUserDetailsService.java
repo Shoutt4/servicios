@@ -22,7 +22,8 @@ public class CustomUserDetailsService implements UserDetailsService {
         Usuario usuario = this.usuarioRepository.findByEmail(email)
                 .orElseThrow(() -> new AuthException("Usuario no registrado"));
 
-        return User.withUsername(usuario.getEmail()).password(usuario.getPassword()).roles(usuario.getRole().getName())
+        return User.withUsername(usuario.getUsername()).password(usuario.getPassword())
+                .roles(usuario.getAuthorities())
                 .build();
     }
 }
