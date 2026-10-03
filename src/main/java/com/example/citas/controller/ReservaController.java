@@ -27,14 +27,15 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/reserva")
 public class ReservaController {
-    private final ReservaService reservaService;
+/*   
+ private final ReservaService reservaService;
 
     public ReservaController(ReservaService reservaService) {
 
         this.reservaService = reservaService;
     }
 
-    /*
+    
      * @PreAuthorize("hasRole('USER')")
      * 
      * @PostMapping("/create")
@@ -43,7 +44,7 @@ public class ReservaController {
      * return ResponseEntity.status(HttpStatus.CREATED).body(this.reservaService.
      * registrarReserva(request));
      * }
-     */
+ 
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/getAll")
     public ResponseEntity<Page<ResponseBookingDTO>> getAll(Pageable page) {
@@ -69,4 +70,6 @@ public class ReservaController {
     public ResponseEntity<Map<String, Object>> retisterReserva(@Valid @RequestBody ReservaRequestDTO requestDTO) {
         return ResponseEntity.status(HttpStatus.CREATED).body(this.reservaService.createReserva(requestDTO));
     }
+
+        */
 }

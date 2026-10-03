@@ -16,16 +16,11 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.Data;
 
 @Entity
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
 @Table(name = "tlb_user")
-public class Usuario implements UserDetails {
+public class Usuario {
     @Id
     @GeneratedValue
     @UuidGenerator
@@ -38,39 +33,75 @@ public class Usuario implements UserDetails {
     private Role role;
     private LocalDateTime createAt;
 
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
+    public Usuario(String a, String b, String c, int d) {
+        this.name = a;
+        this.email = b;
+        this.password = c;
+        this.phone = d;
     }
 
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
+    public Usuario(String a, String b, String c, int d, Role rol) {
+        this.name = a;
+        this.email = b;
+        this.password = c;
+        this.phone = d;
+        this.role = rol;
     }
 
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
+    public LocalDateTime getCreateAt() {
+        return createAt;
     }
 
-    @Override
-    public boolean isEnabled() {
-        return true;
+    public String getEmail() {
+        return email;
     }
 
-    @Override
-    public String getUsername() {
-        return this.email;
+    public String getId_user() {
+        return id_user;
     }
 
-    @Override
+    public String getName() {
+        return name;
+    }
+
     public String getPassword() {
-        return this.password;
+        return password;
     }
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(this.role.getName()));
+    public int getPhone() {
+        return phone;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setCreateAt(LocalDateTime createAt) {
+        this.createAt = createAt;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setId_user(String id_user) {
+        this.id_user = id_user;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setPhone(int phone) {
+        this.phone = phone;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 
 }

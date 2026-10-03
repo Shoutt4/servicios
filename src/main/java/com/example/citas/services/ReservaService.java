@@ -50,22 +50,26 @@ public class ReservaService {
          * "servicio no encontrado con id " + request.getServici_id()));
          * return new Reserva(user, servicio, request.getEstado());
          * }
-         */
-        private ResponseBookingDTO convertirReservaResponse(Reserva reserva) {
-                ServicioResponse servicioResponse = new ServicioResponse(reserva.getServicio_id().getId_service(),
-                                reserva.getServicio_id().getNombre(), reserva.getServicio_id().getDuracion_Service(),
-                                reserva.getServicio_id().getActivo(), reserva.getServicio_id().getPrecio());
-                UserRegisterResponse usuarioResponse = new UserRegisterResponse(reserva.getUsuario_id().getId(),
-                                reserva.getUsuario_id().getName(), reserva.getUsuario_id().getEmail(),
-                                reserva.getUsuario_id().getPhone(),
-                                new RoleResponse(reserva.getUsuario_id().getRole().getId(),
-                                                reserva.getUsuario_id().getRole().getName()));
-                return new ResponseBookingDTO(reserva.getId_reserva(), reserva.getFecha_reserva(),
-                                reserva.getFecha_reserva(),
-                                servicioResponse, usuarioResponse);
-        }
-
-        /*
+         * 
+         * private ResponseBookingDTO convertirReservaResponse(Reserva reserva) {
+         * ServicioResponse servicioResponse = new
+         * ServicioResponse(reserva.getServicio_id().getId_service(),
+         * reserva.getServicio_id().getNombre(),
+         * reserva.getServicio_id().getDuracion_Service(),
+         * reserva.getServicio_id().getActivo(), reserva.getServicio_id().getPrecio());
+         * UserRegisterResponse usuarioResponse = new
+         * UserRegisterResponse(reserva.getUsuario_id().getId(),
+         * reserva.getUsuario_id().getName(), reserva.getUsuario_id().getEmail(),
+         * reserva.getUsuario_id().getPhone(),
+         * new RoleResponse(reserva.getUsuario_id().getRole().getId(),
+         * reserva.getUsuario_id().getRole().getName()));
+         * return new ResponseBookingDTO(reserva.getId_reserva(),
+         * reserva.getFecha_reserva(),
+         * reserva.getFecha_reserva(),
+         * servicioResponse, usuarioResponse);
+         * }
+         * 
+         * 
          * @Transactional
          * public Map<String, Object> registrarReserva(CreateBookingDTO request) {
          * Reserva reserva = this.reservaRespository.save(convertirRequest(request));
@@ -76,59 +80,64 @@ public class ReservaService {
          * return response;
          * 
          * }
+         * 
+         * public Page<ResponseBookingDTO> getAll(Pageable page) {
+         * return
+         * this.reservaRespository.findAll(page).map(this::convertirReservaResponse);
+         * }
+         * 
+         * @Transactional
+         * public Page<ResponseBookingDTO> getAllFromy(Pageable page, String id_usuario)
+         * {
+         * if (this.usuarioRepository.findById(id_usuario).isPresent()) {
+         * return this.reservaRespository.getAllFromY(id_usuario, page)
+         * .map(this::convertirReservaResponse);
+         * } else {
+         * throw new AuthException("usuario no encontrado con id " + id_usuario);
+         * }
+         * }
+         * 
+         * @Transactional
+         * public Map<String, Object> updateEstado(String id_reserva, Estado estado) {
+         * Map<String, Object> response = new HashMap<>();
+         * if (this.reservaRespository.findById(id_reserva).isPresent()) {
+         * Reserva res = this.reservaRespository.findById(id_reserva)
+         * .orElseThrow(() -> new ExceptionGeneral("reserva no encontrada con ese id"));
+         * res.setEstado(estado);
+         * response.put("estado ", "estado actualizdo correctamente");
+         * response.put("data",
+         * convertirReservaResponse(this.reservaRespository.save(res)));
+         * return response;
+         * 
+         * } else {
+         * throw new RuntimeException("resreva no encotrada");
+         * }
+         * }
+         * 
+         * private Reserva convertirDtoRequest(ReservaRequestDTO ruest, Usuario usuario,
+         * Servicio servicio) {
+         * 
+         * return new Reserva(usuario, servicio, ruest.getEstado(),
+         * ruest.getFechaReserva());
+         * 
+         * }
+         * 
+         * @Transactional
+         * public Map<String, Object> createReserva(ReservaRequestDTO request) {
+         * Map<String, Object> response = new HashMap<>();
+         * Servicio service = this.servicioRepository.findById(request.getIdServicio())
+         * .orElseThrow(() -> new ServicioException("Servicio no encontrado"));
+         * Usuario usuario = this.usuarioRepository.findById(request.getIdUsuario())
+         * .orElseThrow(() -> new AuthException("usuario no encontrado"));
+         * if (service.getActivo()) {
+         * response.put("status", "servicio creaodo con exito");
+         * response.put("data", convertirReservaResponse(
+         * this.reservaRespository.save(this.reservaRespository
+         * .save(convertirDtoRequest(request, usuario, service)))));
+         * return response;
+         * } else {
+         * throw new ServicioException("error al crear el servicio");
+         * }
+         * }
          */
-        public Page<ResponseBookingDTO> getAll(Pageable page) {
-                return this.reservaRespository.findAll(page).map(this::convertirReservaResponse);
-        }
-
-        @Transactional
-        public Page<ResponseBookingDTO> getAllFromy(Pageable page, String id_usuario) {
-                if (this.usuarioRepository.findById(id_usuario).isPresent()) {
-                        return this.reservaRespository.getAllFromY(id_usuario, page)
-                                        .map(this::convertirReservaResponse);
-                } else {
-                        throw new AuthException("usuario no encontrado con id " + id_usuario);
-                }
-        }
-
-        @Transactional
-        public Map<String, Object> updateEstado(String id_reserva, Estado estado) {
-                Map<String, Object> response = new HashMap<>();
-                if (this.reservaRespository.findById(id_reserva).isPresent()) {
-                        Reserva res = this.reservaRespository.findById(id_reserva)
-                                        .orElseThrow(() -> new ExceptionGeneral("reserva no encontrada con ese id"));
-                        res.setEstado(estado);
-                        response.put("estado ", "estado actualizdo correctamente");
-                        response.put("data", convertirReservaResponse(this.reservaRespository.save(res)));
-                        return response;
-
-                } else {
-                        throw new RuntimeException("resreva no encotrada");
-                }
-        }
-
-        private Reserva convertirDtoRequest(ReservaRequestDTO ruest, Usuario usuario, Servicio servicio) {
-
-                return new Reserva(usuario, servicio, ruest.getEstado(), ruest.getFechaReserva());
-
-        }
-
-        @Transactional
-        public Map<String, Object> createReserva(ReservaRequestDTO request) {
-                Map<String, Object> response = new HashMap<>();
-                Servicio service = this.servicioRepository.findById(request.getIdServicio())
-                                .orElseThrow(() -> new ServicioException("Servicio no encontrado"));
-                Usuario usuario = this.usuarioRepository.findById(request.getIdUsuario())
-                                .orElseThrow(() -> new AuthException("usuario no encontrado"));
-                if (service.getActivo()) {
-                        response.put("status", "servicio creaodo con exito");
-                        response.put("data", convertirReservaResponse(
-                                        this.reservaRespository.save(this.reservaRespository
-                                                        .save(convertirDtoRequest(request, usuario, service)))));
-                        return response;
-                } else {
-                        throw new ServicioException("error al crear el servicio");
-                }
-        }
-        
 }

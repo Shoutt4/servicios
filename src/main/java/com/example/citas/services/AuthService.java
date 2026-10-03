@@ -36,13 +36,13 @@ public class AuthService {
     }
 
     public Usuario convertirRequest(UserRequest request) {
-        return new Usuario(request.getName(), request.getEmail(), passwordEncoder.encode(request.getPassword()),
+        return new Usuario(request.getName(), request.getName(), passwordEncoder.encode(request.getPassword()),
                 request.getPhone());
     }
 
     public UserRegisterResponse convertirResponse(Usuario usuario) {
         RoleResponse rol = new RoleResponse(usuario.getRole().getId(), usuario.getRole().getName());
-        return new UserRegisterResponse(usuario.getId(), usuario.getName(), usuario.getEmail(), usuario.getPhone(),
+        return new UserRegisterResponse(usuario.getId_user(), usuario.getName(), usuario.getEmail(), usuario.getPhone(),
                 rol);
     }
 
