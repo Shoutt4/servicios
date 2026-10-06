@@ -1,13 +1,16 @@
 package com.example.citas.controller;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.citas.dto.LoginRequest;
@@ -15,7 +18,7 @@ import com.example.citas.dto.LoginRespones;
 import com.example.citas.dto.UpdateUserDTO;
 import com.example.citas.dto.UserRegisterResponse;
 import com.example.citas.dto.UserRequest;
-
+import com.example.citas.dto.auth.AuthResponse;
 import com.example.citas.security.JwtService;
 import com.example.citas.services.AuthService;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -70,6 +73,12 @@ public class AuthController {
     public ResponseEntity<Map<String, Object>> updateUser(Authentication authentication,
             @RequestBody UpdateUserDTO request) {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(this.authService.updateUser(authentication, request));
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/byWitch")
+    public ResponseEntity<List<AuthResponse>> getWitch(@RequestParam String name) {
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(this.authService.getUserWitch(name));
     }
 
 }

@@ -1,6 +1,7 @@
 package com.example.citas.services;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.security.core.Authentication;
@@ -18,6 +19,8 @@ import com.example.citas.models.Usuario;
 import com.example.citas.repository.RoleRepository;
 import com.example.citas.repository.UsuarioRepository;
 import com.example.citas.security.JwtService;
+import com.example.citas.dto.auth.AuthResponse;
+import com.example.citas.excepcion.ErrorGlobal;
 
 @Service
 public class AuthService {
@@ -92,6 +95,27 @@ public class AuthService {
             return res;
         } else {
             throw new AuthException("error");
+        }
+    }
+
+    public AuthResponse converirResponse2(Usuario usuario) {
+        RoleResponse response = new RoleResponse(usuario.getRole().getId(), usuario.getRole().getName());
+        return AuthResponse.builder().id_user(usuario.getId_user()).name(usuario.getName()).email(usuario.getEmail())
+                .role(response).createAt(usuario.getCreateAt()).build();
+    }
+
+    public List<AuthResponse> getUserWitch(String name) {
+        if (name != null && name != "") {
+            List<Usuario> users = this.usuarioRepository.findByNameStartingWith(name);
+            if (users.size() != 0) {
+                return this.usuarioRepository.findByNameStartingWith(name).stream().map(this::converirResponse2)
+                        .toList();
+            } else {
+                throw new ErrorGlobal("402", "ningun usuario encontrado con ese nombre");
+            }
+
+        } else {
+            throw new ErrorGlobal("404", "error de parametros");
         }
     }
 

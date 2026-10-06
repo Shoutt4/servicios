@@ -33,6 +33,10 @@ public class Usuario {
     private Role role;
     private LocalDateTime createAt;
 
+    public Usuario() {
+
+    }
+
     public Usuario(String a, String b, String c, int d) {
         this.name = a;
         this.email = b;
