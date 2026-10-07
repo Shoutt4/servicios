@@ -1,5 +1,7 @@
 package com.example.citas.services;
 
+import java.security.PublicKey;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -119,4 +121,44 @@ public class AuthService {
         }
     }
 
+    public List<AuthResponse> getUserIgnoreCaseByName(String name) {
+        if (name != null && name != "") {
+            List<Usuario> users = this.usuarioRepository.findByNameIgnoringCase(name);
+            if (users.size() != 0) {
+                return users.stream().map(this::converirResponse2).toList();
+            } else {
+                throw new ErrorGlobal("404", "no existe nungun usuario que tenga el nombre + " + name);
+            }
+        } else {
+            throw new ErrorGlobal("400", "parametro name invalido null");
+        }
+    }
+
+    public List<AuthResponse> getUsuariosByCointainigNameIgoneCase(String name) {
+
+        if (name != null && name != "") {
+            List<Usuario> users = this.usuarioRepository.findByNameContainingIgnoreCase(name);
+            if (!users.isEmpty()) {
+                return users.stream().map(this::converirResponse2).toList();
+            } else {
+                throw new ErrorGlobal("404", "no existen datos registrados con el nombre de " + name);
+            }
+        } else {
+            throw new ErrorGlobal("400", "parametro name invalido");
+        }
+    }
+
+    public List<AuthResponse> getUsersByCreateAt(LocalDateTime fecha) {
+        if (!fecha.equals("fecha") && !fecha.equals(null)) {
+            List<Usuario> users = this.usuarioRepository.findByCreateAtGreaterThan(fecha);
+            if (users.size() != 0) {
+                return users.stream().map(this::converirResponse2).toList();
+            } else {
+                throw new ErrorGlobal("404", "ningun usuario encontrado con fecha creada ");
+            }
+
+        } else {
+            throw new ErrorGlobal("400", "parametro " + fecha + " invalido");
+        }
+    }
 }

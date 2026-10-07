@@ -1,8 +1,10 @@
 package com.example.citas.controller;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -21,6 +23,9 @@ import com.example.citas.dto.UserRequest;
 import com.example.citas.dto.auth.AuthResponse;
 import com.example.citas.security.JwtService;
 import com.example.citas.services.AuthService;
+
+import jakarta.validation.Valid;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -79,6 +84,28 @@ public class AuthController {
     @GetMapping("/byWitch")
     public ResponseEntity<List<AuthResponse>> getWitch(@RequestParam String name) {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(this.authService.getUserWitch(name));
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/userIgnorecase")
+    public ResponseEntity<List<AuthResponse>> getUserByNameIgnoreCase(
+            @Valid @RequestParam(name = "nombre", required = true) String name) {
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(this.authService.getUserIgnoreCaseByName(name));
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/ignoreCaseContent")
+    public ResponseEntity<List<AuthResponse>> getIncludeIgnoreCaseCointainig(
+            @Valid @RequestParam(name = "parametro", required = true) String name) {
+        return ResponseEntity.status(HttpStatus.ACCEPTED)
+                .body(this.authService.getUsuariosByCointainigNameIgoneCase(name));
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/createAt")
+    public ResponseEntity<List<AuthResponse>> getUserByCreateAt(
+            @Valid @RequestParam(name = "fechaCreacion", required = true) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime fecha) {
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(this.authService.getUsersByCreateAt(fecha));
     }
 
 }

@@ -3,8 +3,6 @@ package com.example.citas.services;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 
-import com.example.citas.dto.ResponseBookingDTO;
-
 import java.util.HashMap;
 import java.util.Map;
 

@@ -1,11 +1,13 @@
 package com.example.citas.excepcion;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -62,6 +64,15 @@ public class GlobalExceptionHandler {
         response.put("status", ex.getStatus());
         response.put("message", ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ResponseEntity<Map<String, Object>> responseErrorParams(MissingServletRequestParameterException ex) {
+        Map<String, Object> response = new HashMap<>();
+        response.put("succes", false);
+        response.put("status", HttpStatus.BAD_REQUEST.value());
+        response.put("message", "parametro invalido " + ex.getParameterName());
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
 }
