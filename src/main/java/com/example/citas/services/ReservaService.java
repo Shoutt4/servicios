@@ -12,6 +12,7 @@ import com.example.citas.dto.RoleResponse;
 import com.example.citas.dto.ServicioResponse;
 import com.example.citas.dto.UserRegisterResponse;
 import com.example.citas.excepcion.AuthException;
+import com.example.citas.excepcion.ErrorGlobal;
 import com.example.citas.excepcion.ExceptionGeneral;
 import com.example.citas.excepcion.ServicioException;
 import com.example.citas.models.Estado;
@@ -25,6 +26,8 @@ import java.util.List;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import com.example.citas.dto.RequestDtoReserva;
+import com.example.citas.models.Servicio;
 
 @Service
 public class ReservaService {
@@ -37,6 +40,23 @@ public class ReservaService {
                 this.reservaRespository = reservaRespository;
                 this.servicioRepository = servicioRepository;
                 this.usuarioRepository = usuarioRepository;
+        }
+
+        public ServicioResponse convetirServicio(Servicio ser) {
+                return new ServicioResponse(ser.getId_service(), ser.getNombre(), ser.getDuracion_Service(),
+                                ser.getActivo(), ser.getPrecio());
+        }
+
+        public List<ServicioResponse> getUserFilter(RequestDtoReserva request) {
+                List<Reserva> rserva = this.reservaRespository
+                                .findByServicioNombreIgnoreCaseAndServicioActivoAndServicioPrecioBetweenAndEstadoEqualsOrderByServicioPrecioDesc(
+                                                request.getNombreServicio(), request.getActivo(), request.getMin(),
+                                                request.getMax(), request.getEstado());
+                if (!rserva.isEmpty()) {
+                        return rserva.stream().map(t -> convetirServicio(t.getServicio_id())).toList();
+                } else {
+                        throw new ErrorGlobal("403", "ningun dato encontrado con esa espeficifcacion");
+                }
         }
 
         /*

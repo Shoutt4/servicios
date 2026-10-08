@@ -14,6 +14,7 @@ import com.example.citas.dto.RoleResponse;
 import com.example.citas.dto.UpdateUserDTO;
 import com.example.citas.dto.UserRegisterResponse;
 import com.example.citas.dto.UserRequest;
+import com.example.citas.dto.UsuarioResponse;
 import com.example.citas.excepcion.AuthException;
 import com.example.citas.excepcion.CategoriaExcetoon;
 import com.example.citas.models.Role;
@@ -29,14 +30,14 @@ public class AuthService {
 
     private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;
-    private final RoleRepository repository;
+    private final RoleRepository roleRepository;
     private final JwtService jwtService;
 
     public AuthService(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder,
             RoleRepository roleRepository, JwtService jwtService) {
         this.usuarioRepository = usuarioRepository;
         this.passwordEncoder = passwordEncoder;
-        this.repository = roleRepository;
+        this.roleRepository = roleRepository;
         this.jwtService = jwtService;
     }
 
@@ -53,7 +54,7 @@ public class AuthService {
 
     public UserRegisterResponse register(UserRequest request) {
         if (!this.usuarioRepository.findByEmail(request.getEmail()).isPresent()) {
-            Role rolUserNew = this.repository.findByNameIgnoreCase("user")
+            Role rolUserNew = this.roleRepository.findByNameIgnoreCase("user")
                     .orElseThrow(() -> new CategoriaExcetoon("no se encontro rol useer"));
             return convertirResponse(this.usuarioRepository.save(new Usuario(request.getName(), request.getEmail(),
                     passwordEncoder.encode(request.getPassword()), request.getPhone(), rolUserNew)));
@@ -159,6 +160,17 @@ public class AuthService {
 
         } else {
             throw new ErrorGlobal("400", "parametro " + fecha + " invalido");
+        }
+    }
+
+    public List<AuthResponse> getByNameAndRole(String name, String role) {
+     
+        List<Usuario> response = this.usuarioRepository.findByNameAndRoleName(name, role);
+
+        if (!response.isEmpty()) {
+            return response.stream().map(this::converirResponse2).toList();
+        } else {
+            throw new ErrorGlobal("400", "no existen usuarios con las especificaciones");
         }
     }
 }

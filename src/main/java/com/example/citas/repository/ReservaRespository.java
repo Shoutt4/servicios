@@ -1,6 +1,9 @@
 package com.example.citas.repository;
 
+import com.example.citas.models.Estado;
 import com.example.citas.models.Reserva;
+
+import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,4 +18,12 @@ public interface ReservaRespository extends JpaRepository<Reserva, String> {
     Page<Reserva> getAllFromY(
             @Param("id_usuario") String id_usuario,
             Pageable page);
+
+List<Reserva> findByServicioNombreIgnoreCaseAndServicioActivoAndServicioPrecioBetweenAndEstadoEqualsOrderByServicioPrecioDesc(
+        String nombreServicio,
+        Boolean activo,
+        double min,
+        double max,
+        Estado estado
+);
 }

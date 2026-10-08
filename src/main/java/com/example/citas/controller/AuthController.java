@@ -106,6 +106,14 @@ public class AuthController {
     public ResponseEntity<List<AuthResponse>> getUserByCreateAt(
             @Valid @RequestParam(name = "fechaCreacion", required = true) @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") LocalDateTime fecha) {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(this.authService.getUsersByCreateAt(fecha));
+
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/nameAndRole")
+    public ResponseEntity<List<AuthResponse>> getUserByRoleAndName(@Valid @RequestParam(required = true) String name,
+            @RequestParam(required = true) String role) {
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(this.authService.getByNameAndRole(name, role));
     }
 
 }

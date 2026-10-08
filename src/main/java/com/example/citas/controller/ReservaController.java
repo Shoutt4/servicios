@@ -17,25 +17,34 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.citas.dto.CreateBookingDTO;
+import com.example.citas.dto.RequestDtoReserva;
 import com.example.citas.dto.ReservaRequestDTO;
 import com.example.citas.dto.ResponseBookingDTO;
+import com.example.citas.dto.ServicioResponse;
 import com.example.citas.services.ReservaService;
 import jakarta.validation.Valid;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/api/reserva")
 public class ReservaController {
-/*   
- private final ReservaService reservaService;
+
+    private final ReservaService reservaService;
 
     public ReservaController(ReservaService reservaService) {
 
         this.reservaService = reservaService;
     }
 
-    
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/filterChain")
+    public ResponseEntity<List<ServicioResponse>> getForFilter(@RequestBody RequestDtoReserva request) {
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(this.reservaService.getUserFilter(request));
+    }
+    /*
+     * 
      * @PreAuthorize("hasRole('USER')")
      * 
      * @PostMapping("/create")
@@ -44,32 +53,45 @@ public class ReservaController {
      * return ResponseEntity.status(HttpStatus.CREATED).body(this.reservaService.
      * registrarReserva(request));
      * }
- 
-    @PreAuthorize("hasRole('USER')")
-    @GetMapping("/getAll")
-    public ResponseEntity<Page<ResponseBookingDTO>> getAll(Pageable page) {
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(this.reservaService.getAll(page));
-    }
-
-    @PreAuthorize("hasRole('USER')")
-    @GetMapping("/bookings/my-bookings")
-    public ResponseEntity<Page<ResponseBookingDTO>> getFromy(@RequestParam(required = true) String id_user,
-            Pageable page) {
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(this.reservaService.getAllFromy(page, id_user));
-    }
-
-    @PreAuthorize("hasRole('USER')")
-    @PatchMapping("/bookings/{id}/status")
-    public ResponseEntity<Map<String, Object>> updateEstado(@PathVariable String id,
-            @RequestParam Estado estado) {
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(this.reservaService.updateEstado(id, estado));
-    }
-
-    @PreAuthorize("hasRole('USER')")
-    @PostMapping("/register/reserva")
-    public ResponseEntity<Map<String, Object>> retisterReserva(@Valid @RequestBody ReservaRequestDTO requestDTO) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(this.reservaService.createReserva(requestDTO));
-    }
-
-        */
+     * 
+     * @PreAuthorize("hasRole('USER')")
+     * 
+     * @GetMapping("/getAll")
+     * public ResponseEntity<Page<ResponseBookingDTO>> getAll(Pageable page) {
+     * return
+     * ResponseEntity.status(HttpStatus.ACCEPTED).body(this.reservaService.getAll(
+     * page));
+     * }
+     * 
+     * @PreAuthorize("hasRole('USER')")
+     * 
+     * @GetMapping("/bookings/my-bookings")
+     * public ResponseEntity<Page<ResponseBookingDTO>>
+     * getFromy(@RequestParam(required = true) String id_user,
+     * Pageable page) {
+     * return ResponseEntity.status(HttpStatus.ACCEPTED).body(this.reservaService.
+     * getAllFromy(page, id_user));
+     * }
+     * 
+     * @PreAuthorize("hasRole('USER')")
+     * 
+     * @PatchMapping("/bookings/{id}/status")
+     * public ResponseEntity<Map<String, Object>> updateEstado(@PathVariable String
+     * id,
+     * 
+     * @RequestParam Estado estado) {
+     * return ResponseEntity.status(HttpStatus.ACCEPTED).body(this.reservaService.
+     * updateEstado(id, estado));
+     * }
+     * 
+     * @PreAuthorize("hasRole('USER')")
+     * 
+     * @PostMapping("/register/reserva")
+     * public ResponseEntity<Map<String, Object>>
+     * retisterReserva(@Valid @RequestBody ReservaRequestDTO requestDTO) {
+     * return ResponseEntity.status(HttpStatus.CREATED).body(this.reservaService.
+     * createReserva(requestDTO));
+     * }
+     * 
+     */
 }
