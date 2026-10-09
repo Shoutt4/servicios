@@ -46,7 +46,7 @@ public class ReservaService {
                 return new ServicioResponse(ser.getId_service(), ser.getNombre(), ser.getDuracion_Service(),
                                 ser.getActivo(), ser.getPrecio());
         }
-
+  /*
         public List<ServicioResponse> getUserFilter(RequestDtoReserva request) {
                 List<Reserva> rserva = this.reservaRespository
                                 .findByServicioNombreIgnoreCaseAndServicioActivoAndServicioPrecioBetweenAndEstadoEqualsOrderByServicioPrecioDesc(
@@ -59,7 +59,7 @@ public class ReservaService {
                 }
         }
 
-        /*
+      
          * @Transactional
          * private Reserva convertirRequest(CreateBookingDTO request) {
          * Usuario user = this.usuarioRepository.findById(request.getUsuario_id())

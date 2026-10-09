@@ -9,6 +9,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 
 import jakarta.persistence.FetchType;
@@ -24,7 +25,8 @@ public class Usuario {
     @Id
     @GeneratedValue
     @UuidGenerator
-    private String id_user;
+    @Column(name = "id_usuario")
+    private String idUser;
     private String name;
     private String email;
     private String password;
@@ -61,7 +63,7 @@ public class Usuario {
     }
 
     public String getId_user() {
-        return id_user;
+        return idUser;
     }
 
     public String getName() {
@@ -89,7 +91,7 @@ public class Usuario {
     }
 
     public void setId_user(String id_user) {
-        this.id_user = id_user;
+        this.idUser = id_user;
     }
 
     public void setName(String name) {

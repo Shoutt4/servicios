@@ -15,6 +15,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
@@ -24,9 +25,11 @@ public class Reserva {
     @Id
     @GeneratedValue
     @UuidGenerator
-    private String id_reserva;
+    @JoinColumn(name = "id_reserva")
+    private String idReserva;
     @ManyToOne(fetch = FetchType.LAZY)
-    private Usuario usuario_id;
+    @JoinColumn(name = "usuario_id")
+    private Usuario usuarioId;
     @ManyToOne(fetch = FetchType.LAZY)
     private Servicio servicio;
     private LocalDateTime fecha_reserva;
@@ -39,7 +42,7 @@ public class Reserva {
     }
 
     public Reserva(Usuario usuario_id, Servicio servicio_id, Estado estado, LocalDateTime fecha_reserva) {
-        this.usuario_id = usuario_id;
+        this.usuarioId = usuario_id;
         this.servicio = servicio_id;
         this.fecha_reserva = fecha_reserva;
         this.estado = estado;
@@ -58,7 +61,7 @@ public class Reserva {
     }
 
     public String getId_reserva() {
-        return id_reserva;
+        return idReserva;
     }
 
     public Servicio getServicio_id() {
@@ -66,7 +69,7 @@ public class Reserva {
     }
 
     public Usuario getUsuario_id() {
-        return usuario_id;
+        return usuarioId;
     }
 
     public void setCreate_at(LocalDateTime create_at) {
@@ -86,7 +89,7 @@ public class Reserva {
     }
 
     public void setUsuario_id(Usuario usuario_id) {
-        this.usuario_id = usuario_id;
+        this.usuarioId = usuario_id;
     }
 
     @PrePersist

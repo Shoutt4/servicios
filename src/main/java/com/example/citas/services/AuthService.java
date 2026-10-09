@@ -23,6 +23,7 @@ import com.example.citas.repository.RoleRepository;
 import com.example.citas.repository.UsuarioRepository;
 import com.example.citas.security.JwtService;
 import com.example.citas.dto.auth.AuthResponse;
+import com.example.citas.dto.auth.RequestAuth;
 import com.example.citas.excepcion.ErrorGlobal;
 
 @Service
@@ -164,13 +165,49 @@ public class AuthService {
     }
 
     public List<AuthResponse> getByNameAndRole(String name, String role) {
-     
+
         List<Usuario> response = this.usuarioRepository.findByNameAndRoleName(name, role);
 
         if (!response.isEmpty()) {
             return response.stream().map(this::converirResponse2).toList();
         } else {
             throw new ErrorGlobal("400", "no existen usuarios con las especificaciones");
+        }
+    }
+
+    public List<AuthResponse> getUserByNameAndEmail(RequestAuth reuest) {
+        List<Usuario> users = this.usuarioRepository.findByNameAndEmailEquals(reuest.getName(), reuest.getEmail());
+        if (users.size() != 0) {
+            return users.stream().map(this::converirResponse2).toList();
+        } else {
+            throw new ErrorGlobal("404", "no existen datos con los parametros puestos");
+        }
+    }
+
+    public List<AuthResponse> getUserByNameOrEmail(RequestAuth request) {
+        List<Usuario> users = this.usuarioRepository.findByNameContainingOrEmailEquals(request.getName(),
+                request.getEmail());
+        if (!users.isEmpty()) {
+            return users.stream().map(this::converirResponse2).toList();
+        } else {
+            throw new ErrorGlobal("404", "no existen datos con las especificaciones");
+        }
+    }
+
+    public Map<String, Object> existByEmail(String email) {
+        if (this.usuarioRepository.existsByEmail(email)) {
+            return Map.of("succes", true, "data", "el usuario existe con correo  " + email);
+        } else {
+            throw new ErrorGlobal("404", "no existe ningu usuario con el correo :" + email);
+        }
+    }
+
+    public Map<String, Object> coutByEmail(char caracter) {
+        int res = this.usuarioRepository.countByNameStartsWith(caracter);
+        if (res != 0) {
+            return Map.of("succes", true, "cantidad de usuarios", res);
+        } else {
+            throw new ErrorGlobal("404", "no existe ningun suario con ese caracter");
         }
     }
 }

@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 
 import org.hibernate.annotations.UuidGenerator;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -15,7 +16,8 @@ public class Servicio {
     @Id
     @GeneratedValue
     @UuidGenerator
-    private String id_service;
+    @Column(name = "id_Servicio")
+    private String idServicio;
     private String nombre;
     private String descripcion;
     private Time duracion_Service;
@@ -48,7 +50,7 @@ public class Servicio {
     }
 
     public String getId_service() {
-        return id_service;
+        return idServicio;
     }
 
     public String getNombre() {
@@ -83,5 +85,5 @@ public class Servicio {
     private void onCreate() {
         this.createAt = LocalDateTime.now();
     }
-    
+
 }

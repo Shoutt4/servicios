@@ -19,7 +19,7 @@ public interface ServicioRepository extends JpaRepository<Servicio, String> {
 
     @Transactional
     @Modifying
-    @Query("UPDATE Servicio s SET s.activo = :estado WHERE s.id_service=:id")
+    @Query("UPDATE Servicio s SET s.activo = :estado WHERE s.idServicio=:id")
     int updateEstado(
             @Param("estado") boolean estado,
             @Param("id") String id);

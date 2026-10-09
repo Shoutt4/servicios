@@ -37,13 +37,13 @@ public class ReservaController {
 
         this.reservaService = reservaService;
     }
-
+  /*
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/filterChain")
     public ResponseEntity<List<ServicioResponse>> getForFilter(@RequestBody RequestDtoReserva request) {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(this.reservaService.getUserFilter(request));
     }
-    /*
+
      * 
      * @PreAuthorize("hasRole('USER')")
      * 

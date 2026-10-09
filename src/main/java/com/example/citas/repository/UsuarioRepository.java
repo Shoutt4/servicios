@@ -5,7 +5,6 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.example.citas.models.Role;
 import com.example.citas.models.Usuario;
 import java.time.LocalDateTime;
 
@@ -22,4 +21,14 @@ public interface UsuarioRepository extends JpaRepository<Usuario, String> {
     List<Usuario> findByCreateAtGreaterThan(LocalDateTime createAt);
 
     List<Usuario> findByNameAndRoleName(String name, String role);
+
+    List<Usuario> findByNameAndEmailEquals(String name, String email);
+
+    List<Usuario> findByNameContainingOrEmailEquals(String name, String email);
+
+    boolean existsByEmail(String email);
+
+    int countByNameStartsWith(char letra);
+
+    List<Usuario> findByNameNotLike(String name);
 }

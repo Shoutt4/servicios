@@ -21,6 +21,7 @@ import com.example.citas.dto.UpdateUserDTO;
 import com.example.citas.dto.UserRegisterResponse;
 import com.example.citas.dto.UserRequest;
 import com.example.citas.dto.auth.AuthResponse;
+import com.example.citas.dto.auth.RequestAuth;
 import com.example.citas.security.JwtService;
 import com.example.citas.services.AuthService;
 
@@ -116,4 +117,27 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(this.authService.getByNameAndRole(name, role));
     }
 
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/byNameAndEmail")
+    public ResponseEntity<List<AuthResponse>> getByNameAndEmai(@Valid @RequestBody RequestAuth request) {
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(this.authService.getUserByNameAndEmail(request));
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/ByNameOrEmail")
+    public ResponseEntity<List<AuthResponse>> getUserByNameOrEmail(@Valid @RequestBody RequestAuth request) {
+        return ResponseEntity.status(200).body(this.authService.getUserByNameOrEmail(request));
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/exists")
+    public ResponseEntity<Map<String, Object>> existByEmail(@Valid @RequestParam String email) {
+        return ResponseEntity.status(200).body(this.authService.existByEmail(email));
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/countByEmail")
+    public ResponseEntity<Map<String, Object>> countByCharacter(@Valid @RequestParam(required = true) char character) {
+        return ResponseEntity.status(200).body(this.authService.coutByEmail(character));
+    }
 }

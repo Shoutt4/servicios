@@ -12,18 +12,11 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface ReservaRespository extends JpaRepository<Reserva, String> {
-    Page<Reserva> findAll(Pageable page);
+        Page<Reserva> findAll(Pageable page);
 
-    @Query("SELECT R FROM Reserva R  WHERE R.usuario_id.id_user=:id_usuario")
-    Page<Reserva> getAllFromY(
-            @Param("id_usuario") String id_usuario,
-            Pageable page);
+        @Query("SELECT R FROM Reserva R  WHERE R.usuarioId.idUser=:id_usuario")
+        Page<Reserva> getAllFromY(
+                        @Param("id_usuario") String id_usuario,
+                        Pageable page);
 
-List<Reserva> findByServicioNombreIgnoreCaseAndServicioActivoAndServicioPrecioBetweenAndEstadoEqualsOrderByServicioPrecioDesc(
-        String nombreServicio,
-        Boolean activo,
-        double min,
-        double max,
-        Estado estado
-);
 }
