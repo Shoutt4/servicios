@@ -13,7 +13,9 @@ public class ReservaResponseDTO {
     private LocalDateTime fechaReserva;
     private Estado estado;
     private LocalDateTime fechaCreacion;
-
+    public  ReservaResponseDTO(){
+        
+    }
     public Estado getEstado() {
         return estado;
     }

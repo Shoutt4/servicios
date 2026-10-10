@@ -2,6 +2,7 @@ package com.example.citas.repository;
 
 import com.example.citas.models.Estado;
 import com.example.citas.models.Reserva;
+import com.example.citas.models.Role;
 
 import java.util.List;
 
@@ -18,5 +19,15 @@ public interface ReservaRespository extends JpaRepository<Reserva, String> {
         Page<Reserva> getAllFromY(
                         @Param("id_usuario") String id_usuario,
                         Pageable page);
+
+        List<Reserva> findByUsuarioId_IdUser(String idUsuario);
+
+        boolean existsByUsuarioId_IdUser(String id);
+
+        boolean existsByServicio_IdServicio(String id);
+
+        List<Reserva> findByServicio_IdServicioIsAndEstadoIs(String idServicio, Estado estado);
+
+        List<Reserva> findByUsuarioId_IdUserIsOrderByFechaReservaAsc(String idUser);
 
 }

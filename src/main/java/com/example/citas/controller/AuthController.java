@@ -26,13 +26,16 @@ import com.example.citas.security.JwtService;
 import com.example.citas.services.AuthService;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PutMapping;
+
 
 @RestController
 @RequestMapping("/api/v1/")
@@ -139,5 +142,20 @@ public class AuthController {
     @GetMapping("/countByEmail")
     public ResponseEntity<Map<String, Object>> countByCharacter(@Valid @RequestParam(required = true) char character) {
         return ResponseEntity.status(200).body(this.authService.coutByEmail(character));
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/byRole")
+    public ResponseEntity<List<AuthResponse>> getUserByRole(
+            @Valid @RequestParam(name = "role") @NotBlank(message = "el rol no debe ser nulo") @Size(min = 4, max = 16, message = "rol debe ser entre 4 a 16 caracteres") String role) {
+        return ResponseEntity.status(200).body(this.authService.getUserByRole(role));
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/countByRole")
+
+    public ResponseEntity<Map<String, Object>> countUsersByRole(
+            @Valid @RequestParam @NotBlank(message = "el rol no debe ser nulo") String role) {
+        return ResponseEntity.status(200).body(this.authService.countByRole(role));
     }
 }

@@ -7,10 +7,12 @@ import org.springframework.stereotype.Service;
 
 import com.example.citas.dto.CreateBookingDTO;
 import com.example.citas.dto.ReservaRequestDTO;
+import com.example.citas.dto.ReservaResponseDTO;
 import com.example.citas.dto.ResponseBookingDTO;
 import com.example.citas.dto.RoleResponse;
 import com.example.citas.dto.ServicioResponse;
 import com.example.citas.dto.UserRegisterResponse;
+import com.example.citas.dto.servicio.ReservaResponseBasicDTO;
 import com.example.citas.excepcion.AuthException;
 import com.example.citas.excepcion.ErrorGlobal;
 import com.example.citas.excepcion.ExceptionGeneral;
@@ -26,6 +28,8 @@ import java.util.List;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+
 import com.example.citas.dto.RequestDtoReserva;
 import com.example.citas.models.Servicio;
 
@@ -46,20 +50,62 @@ public class ReservaService {
                 return new ServicioResponse(ser.getId_service(), ser.getNombre(), ser.getDuracion_Service(),
                                 ser.getActivo(), ser.getPrecio());
         }
-  /*
-        public List<ServicioResponse> getUserFilter(RequestDtoReserva request) {
-                List<Reserva> rserva = this.reservaRespository
-                                .findByServicioNombreIgnoreCaseAndServicioActivoAndServicioPrecioBetweenAndEstadoEqualsOrderByServicioPrecioDesc(
-                                                request.getNombreServicio(), request.getActivo(), request.getMin(),
-                                                request.getMax(), request.getEstado());
-                if (!rserva.isEmpty()) {
-                        return rserva.stream().map(t -> convetirServicio(t.getServicio_id())).toList();
+
+        public ReservaResponseBasicDTO convertirDtoReserva(Reserva reserva) {
+                return ReservaResponseBasicDTO.builder()
+                                .idReserva(reserva.getId_reserva()).idUsuario(reserva.getUsuario_id().getId_user())
+                                .idServicio(reserva.getServicio_id().getId_service())
+                                .fechaReserva(reserva.getFecha_reserva()).estado(reserva.getEstado())
+                                .fechaCreacion(reserva.getCreate_at()).build();
+
+        }
+
+        public List<ReservaResponseBasicDTO> getReservaByUser(String id_usuario) {
+
+                if (this.reservaRespository.existsByUsuarioId_IdUser(id_usuario)) {
+                        return this.reservaRespository.findByUsuarioId_IdUser(id_usuario)
+                                        .stream()
+                                        .map(this::convertirDtoReserva).toList();
                 } else {
-                        throw new ErrorGlobal("403", "ningun dato encontrado con esa espeficifcacion");
+                        throw new ErrorGlobal("404", "NO EXISTE NINGUNA RESERVA PARA ESTE USUARIO");
                 }
         }
 
-      
+        public List<ReservaResponseBasicDTO> getReservaByEstadoAndServicio(String servicioId, Estado estado) {
+                if (this.reservaRespository.existsByServicio_IdServicio(servicioId)) {
+                        return this.reservaRespository.findByServicio_IdServicioIsAndEstadoIs(servicioId, estado)
+                                        .stream().map(this::convertirDtoReserva).toList();
+                } else {
+                        throw new ErrorGlobal("404", "no existe reserva con id " + servicioId);
+                }
+        }
+
+        public List<ReservaResponseBasicDTO> getUserOrderByFechaReserva(String idUser) {
+                if (this.reservaRespository.existsByUsuarioId_IdUser(idUser)) {
+                        return this.reservaRespository.findByUsuarioId_IdUserIsOrderByFechaReservaAsc(idUser).stream()
+                                        .map(
+                                                        this::convertirDtoReserva)
+                                        .toList();
+                } else {
+                        throw new ErrorGlobal("404", "no existen reserva para el ese usuario");
+                }
+        }
+        /*
+         * public List<ServicioResponse> getUserFilter(RequestDtoReserva request) {
+         * List<Reserva> rserva = this.reservaRespository
+         * .findByServicioNombreIgnoreCaseAndServicioActivoAndServicioPrecioBetweenAndEstadoEqualsOrderByServicioPrecioDesc(
+         * request.getNombreServicio(), request.getActivo(), request.getMin(),
+         * request.getMax(), request.getEstado());
+         * if (!rserva.isEmpty()) {
+         * return rserva.stream().map(t ->
+         * convetirServicio(t.getServicio_id())).toList();
+         * } else {
+         * throw new ErrorGlobal("403",
+         * "ningun dato encontrado con esa espeficifcacion");
+         * }
+         * }
+         * 
+         * 
          * @Transactional
          * private Reserva convertirRequest(CreateBookingDTO request) {
          * Usuario user = this.usuarioRepository.findById(request.getUsuario_id())

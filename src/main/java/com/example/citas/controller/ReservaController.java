@@ -21,6 +21,7 @@ import com.example.citas.dto.RequestDtoReserva;
 import com.example.citas.dto.ReservaRequestDTO;
 import com.example.citas.dto.ResponseBookingDTO;
 import com.example.citas.dto.ServicioResponse;
+import com.example.citas.dto.servicio.ReservaResponseBasicDTO;
 import com.example.citas.services.ReservaService;
 import jakarta.validation.Valid;
 
@@ -37,13 +38,35 @@ public class ReservaController {
 
         this.reservaService = reservaService;
     }
-  /*
+
     @PreAuthorize("hasRole('USER')")
-    @GetMapping("/filterChain")
-    public ResponseEntity<List<ServicioResponse>> getForFilter(@RequestBody RequestDtoReserva request) {
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(this.reservaService.getUserFilter(request));
+    @GetMapping("/byUser/{id}")
+    public ResponseEntity<List<ReservaResponseBasicDTO>> getReservaByUserId(@Valid @PathVariable String id) {
+        return ResponseEntity.status(200).body(this.reservaService.getReservaByUser(id));
     }
 
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/byUser/{id}/estado")
+    public ResponseEntity<List<ReservaResponseBasicDTO>> getUserAll(@Valid @PathVariable String id,
+            @RequestParam Estado estado) {
+        return ResponseEntity.status(200).body(this.reservaService.getReservaByEstadoAndServicio(id, estado));
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/getByUser/{idUser}/OrderByFechaCreacuib")
+    public ResponseEntity<List<ReservaResponseBasicDTO>> getServicesByUser(@Valid @PathVariable String idUser) {
+        return ResponseEntity.status(200).body(this.reservaService.getUserOrderByFechaReserva(idUser));
+    }
+    /*
+     * @PreAuthorize("hasRole('USER')")
+     * 
+     * @GetMapping("/filterChain")
+     * public ResponseEntity<List<ServicioResponse>> getForFilter(@RequestBody
+     * RequestDtoReserva request) {
+     * return ResponseEntity.status(HttpStatus.ACCEPTED).body(this.reservaService.
+     * getUserFilter(request));
+     * }
+     * 
      * 
      * @PreAuthorize("hasRole('USER')")
      * 

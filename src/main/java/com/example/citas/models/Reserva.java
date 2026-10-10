@@ -32,7 +32,7 @@ public class Reserva {
     private Usuario usuarioId;
     @ManyToOne(fetch = FetchType.LAZY)
     private Servicio servicio;
-    private LocalDateTime fecha_reserva;
+    private LocalDateTime fechaReserva;
     @Enumerated(EnumType.STRING)
     private Estado estado;
     private LocalDateTime create_at;
@@ -44,7 +44,7 @@ public class Reserva {
     public Reserva(Usuario usuario_id, Servicio servicio_id, Estado estado, LocalDateTime fecha_reserva) {
         this.usuarioId = usuario_id;
         this.servicio = servicio_id;
-        this.fecha_reserva = fecha_reserva;
+        this.fechaReserva = fecha_reserva;
         this.estado = estado;
     }
 
@@ -57,7 +57,7 @@ public class Reserva {
     }
 
     public LocalDateTime getFecha_reserva() {
-        return fecha_reserva;
+        return fechaReserva;
     }
 
     public String getId_reserva() {
@@ -81,7 +81,7 @@ public class Reserva {
     }
 
     public void setFecha_reserva(LocalDateTime fecha_reserva) {
-        this.fecha_reserva = fecha_reserva;
+        this.fechaReserva = fecha_reserva;
     }
 
     public void setServicio_id(Servicio servicio_id) {

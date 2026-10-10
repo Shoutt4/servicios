@@ -210,4 +210,21 @@ public class AuthService {
             throw new ErrorGlobal("404", "no existe ningun suario con ese caracter");
         }
     }
+
+    public List<AuthResponse> getUserByRole(String role) {
+        if (this.usuarioRepository.existsByRole_Name(role)) {
+            return this.usuarioRepository.findByRole_NameIs(role).stream().map(this::converirResponse2).toList();
+        } else {
+            throw new ErrorGlobal("404", "ningun usuario existente con ese rol");
+        }
+    }
+
+    public Map<String, Object> countByRole(String role) {
+        if (this.usuarioRepository.existsByRole_Name(role)) {
+            return Map.of("succes", true,
+                    "cantidad usuarios", this.usuarioRepository.countByRole_Name(role));
+        } else {
+            throw new ErrorGlobal("404", "no esiste ninguna cantidad registardos con ese rol");
+        }
+    }
 }

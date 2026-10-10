@@ -31,4 +31,10 @@ public interface UsuarioRepository extends JpaRepository<Usuario, String> {
     int countByNameStartsWith(char letra);
 
     List<Usuario> findByNameNotLike(String name);
+
+    List<Usuario> findByRole_NameIs(String name);
+
+    boolean existsByRole_Name(String name);
+
+    int countByRole_Name(String name);
 }
