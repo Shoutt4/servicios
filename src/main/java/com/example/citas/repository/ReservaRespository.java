@@ -4,6 +4,7 @@ import com.example.citas.models.Estado;
 import com.example.citas.models.Reserva;
 import com.example.citas.models.Role;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -30,4 +31,15 @@ public interface ReservaRespository extends JpaRepository<Reserva, String> {
 
         List<Reserva> findByUsuarioId_IdUserIsOrderByFechaReservaAsc(String idUser);
 
+        List<Reserva> findByFechaReservaBetween(LocalDateTime min, LocalDateTime max);
+
+        int countByFechaReservaBetween(LocalDateTime min, LocalDateTime max);
+
+        boolean existsByEstado(Estado estado);
+
+        List<Reserva> findByEstado(Estado estado);
+
+        int countByFechaReservaAndEstado(LocalDateTime fecha, Estado estado);
+
+        List<Reserva> findByFechaReservaAndEstado(LocalDateTime fecha, Estado estado);
 }

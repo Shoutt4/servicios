@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.citas.dto.CreateBookingDTO;
 import com.example.citas.dto.RequestDtoReserva;
+import com.example.citas.dto.RequestFechaDTO;
+import com.example.citas.dto.RequetFechaAndEstadoDTO;
 import com.example.citas.dto.ReservaRequestDTO;
 import com.example.citas.dto.ResponseBookingDTO;
 import com.example.citas.dto.ServicioResponse;
@@ -57,6 +59,26 @@ public class ReservaController {
     public ResponseEntity<List<ReservaResponseBasicDTO>> getServicesByUser(@Valid @PathVariable String idUser) {
         return ResponseEntity.status(200).body(this.reservaService.getUserOrderByFechaReserva(idUser));
     }
+
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/fechas")
+    public ResponseEntity<List<ReservaResponseBasicDTO>> getByFechas(@Valid @RequestBody RequestFechaDTO request) {
+        return ResponseEntity.status(200).body(this.reservaService.getByFecha(request));
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/entregado")
+    public ResponseEntity<List<ReservaResponseBasicDTO>> getReservas() {
+        return ResponseEntity.status(200).body(this.reservaService.findByEestado());
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/byfechaAndEstado")
+    public ResponseEntity<List<ReservaResponseBasicDTO>> getReservaByFecha(
+            @Valid @RequestBody RequetFechaAndEstadoDTO request) {
+        return ResponseEntity.status(200).body(this.reservaService.getByFechaAndEstado(request));
+    }
+
     /*
      * @PreAuthorize("hasRole('USER')")
      * 

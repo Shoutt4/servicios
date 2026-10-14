@@ -4,6 +4,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.data.domain.Page;
@@ -14,6 +15,7 @@ import org.springframework.web.server.ResponseStatusException;
 import com.example.citas.repository.ServicioRepository;
 import com.example.citas.dto.ServicioRequest;
 import com.example.citas.dto.ServicioResponse;
+import com.example.citas.excepcion.ErrorGlobal;
 import com.example.citas.excepcion.ServicioException;
 
 import com.example.citas.models.Servicio;
@@ -84,6 +86,42 @@ public class ServicioService {
             return result;
         } else {
             throw new ServicioException("error al cambiar  el estado");
+        }
+    }
+
+    public List<ServicioResponse> getBuEstado() {
+        if (this.servicioRepository.existsByActivo(true)) {
+            return this.servicioRepository.findByActivo(true).stream().map(this::convertirServicio).toList();
+        } else {
+            throw new ErrorGlobal("404", "no existe nunguna reserva actova");
+        }
+    }
+
+    public List<ServicioResponse> getByPrecioLessTan(double precio) {
+        if (precio > 0 && this.servicioRepository.countByPrecioLessThan(precio) > 0) {
+
+            return this.servicioRepository.findByPrecioLessThan(precio).stream().map(this::convertirServicio).toList();
+        }
+        {
+            throw new ErrorGlobal("404", "no existe ningun error con esas espeficicaciones");
+        }
+    }
+
+    public List<ServicioResponse> getbyBytow(double min, double max) {
+        if (this.servicioRepository.countByPrecioBetween(min, max) > 0) {
+            return this.servicioRepository.findByPrecioBetweenOrderByPrecioDesc(min, max).stream()
+                    .map(this::convertirServicio).toList();
+        } else {
+            throw new ErrorGlobal("404", "no existe ningun dato con esas caracteristicas");
+        }
+    }
+
+    public List<ServicioResponse> getByNameContent(String nombre) {
+        if (this.servicioRepository.countByNombreContainingAndActivo(nombre, true) > 0) {
+            return this.servicioRepository.findByNombreContainingAndActivo(nombre, true).stream()
+                    .map(this::convertirServicio).toList();
+        } else {
+            throw new ErrorGlobal("404", "no existe ningun servicio con ese nombre");
         }
     }
 

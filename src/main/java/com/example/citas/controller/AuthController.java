@@ -36,7 +36,6 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 
-
 @RestController
 @RequestMapping("/api/v1/")
 public class AuthController {
@@ -158,4 +157,11 @@ public class AuthController {
             @Valid @RequestParam @NotBlank(message = "el rol no debe ser nulo") String role) {
         return ResponseEntity.status(200).body(this.authService.countByRole(role));
     }
+
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/MATATE")
+    public ResponseEntity<String> aaa() {
+        return ResponseEntity.ok("hola mundo");
+    }
+
 }

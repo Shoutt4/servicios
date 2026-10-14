@@ -31,6 +31,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 
 import com.example.citas.dto.RequestDtoReserva;
+import com.example.citas.dto.RequestFechaDTO;
+import com.example.citas.dto.RequetFechaAndEstadoDTO;
 import com.example.citas.models.Servicio;
 
 @Service
@@ -88,6 +90,35 @@ public class ReservaService {
                                         .toList();
                 } else {
                         throw new ErrorGlobal("404", "no existen reserva para el ese usuario");
+                }
+        }
+
+        public List<ReservaResponseBasicDTO> getByFecha(RequestFechaDTO request) {
+                if (this.reservaRespository.countByFechaReservaBetween(request.getMin(), request.getMax()) > 0) {
+                        return this.reservaRespository.findByFechaReservaBetween(request.getMin(), request.getMax())
+                                        .stream().map(this::convertirDtoReserva).toList();
+                } else {
+                        throw new ErrorGlobal("404", "no existe ninguna reserva entre esas fechas");
+                }
+        }
+
+        public List<ReservaResponseBasicDTO> findByEestado() {
+                if (this.reservaRespository.existsByEstado(Estado.ENTREGADO)) {
+                        return this.reservaRespository.findByEstado(Estado.ENTREGADO).stream()
+                                        .map(this::convertirDtoReserva).toList();
+                } else {
+                        throw new ErrorGlobal("404", "no existe ninguna reserva en estado entregado");
+                }
+        }
+
+        public List<ReservaResponseBasicDTO> getByFechaAndEstado(RequetFechaAndEstadoDTO request) {
+                if (this.reservaRespository.countByFechaReservaAndEstado(request.getFecha(), request.getEstado()) > 0) {
+                        return this.reservaRespository
+                                        .findByFechaReservaAndEstado(request.getFecha(), request.getEstado())
+                                        .stream()
+                                        .map(this::convertirDtoReserva).toList();
+                } else {
+                        throw new ErrorGlobal("404", "no existe ninguna resercva");
                 }
         }
         /*

@@ -72,4 +72,30 @@ public class ServicioController {
             @RequestParam(required = true) Boolean estado) {
         return ResponseEntity.ok(this.servicioService.cambiarEstado(id, estado));
     }
+
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/isActive")
+    public ResponseEntity<List<ServicioResponse>> getByActivo() {
+        return ResponseEntity.status(200).body(this.servicioService.getBuEstado());
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/byPrecioS1")
+
+    public ResponseEntity<List<ServicioResponse>> getByPrecioLestan(@Valid @RequestParam double precio) {
+        return ResponseEntity.status(200).body(this.servicioService.getByPrecioLessTan(precio));
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/byBwron")
+    public ResponseEntity<List<ServicioResponse>> getByPrecios(@Valid @RequestParam double min,
+            @RequestParam double max) {
+        return ResponseEntity.status(200).body(this.servicioService.getbyBytow(min, max));
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/byConintaininf")
+    public ResponseEntity<List<ServicioResponse>> getServiceByCointaning(@Valid @RequestParam String name) {
+        return ResponseEntity.status(200).body(this.servicioService.getByNameContent(name));
+    }
 }
